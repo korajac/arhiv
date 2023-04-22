@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template xml:space="preserve">
+	<t t-name="OcrDialogTmplRadio">
+		<label class="ocr_control ocr_control--radio">
+			<t t-esc="tmpl.name"/>
+			<input type="radio" 
+                   name="radio"
+                   t-att-data-id="tmpl.id"
+                   t-att-checked="i ? None : 'checked'"/>
+			<div class="ocr_control__indicator"></div>
+		</label>
+	</t>
+	<div t-name="OcrDialogSelectTmpl">
+		<div class="container_ocr_steps">
+			<ul class="progressbar_ocr_steps">
+				<li id="step_select" class="ocr_active">Select Template</li>
+				<li id="step_take">Take photo</li>
+				<li id="step_save">Save result</li>
+			</ul>
+		</div>
+		<div class="ocr_templates"></div>
+	</div>
+
+
+	<t t-name="OcrDialogLoaderTime">
+		<div class="ocr_loader_time" style="display:none" title="7">
+			<svg version="1.1" id="L2"
+				xmlns="http://www.w3.org/2000/svg"
+				xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+				<circle fill="none" stroke="#fff" stroke-width="4" stroke-miterlimit="10" cx="50" cy="50" r="48"/>
+				<line fill="none" stroke-linecap="round" stroke="#0088ad" stroke-width="4" stroke-miterlimit="10" x1="50" y1="50" x2="85" y2="50.5">
+					<animateTransform 
+		attributeName="transform" 
+		dur="2s"
+		type="rotate"
+		from="0 50 50"
+		to="360 50 50"
+		repeatCount="indefinite" />
+				</line>
+				<line fill="none" stroke-linecap="round" stroke="#0088ad" stroke-width="4" stroke-miterlimit="10" x1="50" y1="50" x2="49.5" y2="74">
+					<animateTransform 
+		attributeName="transform" 
+		dur="15s"
+		type="rotate"
+		from="0 50 50"
+		to="360 50 50"
+		repeatCount="indefinite" />
+				</line>
+			</svg>
+		</div>
+	</t>
+	<t t-name="OcrDialogLoader">
+		<div class="ocr_loader" title="7">
+			<svg version="1.1" id="Layer_1"
+				xmlns="http://www.w3.org/2000/svg"
+				xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+     width="60px" height="70px" viewBox="0 0 60 70" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+				<rect x="0" y="10" width="12" height="30" fill="#333" opacity="0.2">
+					<animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.6s" repeatCount="indefinite" />
+					<animate attributeName="height" attributeType="XML" values="10; 35; 10" begin="0s" dur="0.6s" repeatCount="indefinite" />
+					<animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="0.6s" repeatCount="indefinite" />
+				</rect>
+				<rect x="20" y="10" width="12" height="30" fill="#333"  opacity="0.2">
+					<animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+					<animate attributeName="height" attributeType="XML" values="10; 35; 10" begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+					<animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+				</rect>
+				<rect x="40" y="10" width="12" height="30" fill="#333"  opacity="0.2">
+					<animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+					<animate attributeName="height" attributeType="XML" values="10; 35; 10" begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+					<animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+				</rect>
+			</svg>
+		</div>
+	</t>
+	<div t-name="OcrDialog">
+		<div class="container_ocr_steps">
+			<ul class="progressbar_ocr_steps">
+				<li id="step_select" class="ocr_done">Select Template</li>
+				<li id="step_take" class="ocr_active">Take photo</li>
+				<li id="step_save">Save result</li>
+			</ul>
+		</div>
+		<div id="live_webcam" style="display:none"/>
+		<canvas id="ocr_canvas" width="400" height="400"></canvas>
+		<canvas id="ocr_canvas_snap" width="400" height="400"></canvas>
+
+		<div class="o_form_image_controls" style="display:none">
+			<span class="o_form_binary_progress">Uploading...</span>
+			<t t-call="HiddenInputFile">
+				<t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+			</t>
+		</div>
+	</div>
+
+
+	<t t-name="OcrDialogConfirmField">
+		<tr>
+			<td class="o_td_label">
+				<label class="o_form_label" data-original-title="" title="">
+					<t t-esc="field.name"/>
+				</label>
+			</td>
+			<td style="width: 100%;">
+				<div>
+					<input class="o_input" t-att-name="field.name" t-att-value="field.val" type="text"/>
+				</div>
+			</td>
+		</tr>
+	</t>
+	<div t-name="OcrDialogConfirm">
+		<div class="container_ocr_steps">
+			<ul class="progressbar_ocr_steps">
+				<li id="step_select" class="ocr_done">Select Template</li>
+				<li id="step_take" class="ocr_done">Take photo</li>
+				<li id="step_save" class="ocr_active">Save result</li>
+			</ul>
+		</div>
+		<div class="ocr_result">
+			<table class="o_group o_inner_group o_group_col_6">
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+</template>

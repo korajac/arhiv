@@ -1,0 +1,975 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Copyright (C) 2020 Artem Shurshilov <shurshilov.a@yandex.ru>-->
+    <templates>
+    	<t t-name="button_favorites_am">
+                <button type="button" class="btn btn-primary fa fa-download download_filter" string="Download attachments by filter" title="Download attachments by filter">
+                    Download selected
+                </button>
+        </t>
+        <t t-name="AttachmentsList">
+            <div class="o_view_manager_content">
+                <div class="table-responsive table-listjs-responsive-vertical shadow-z-1" id="hacker-list">
+                <table class="table-list table-listjs table-listjs-hover table-listjs-mc-light-blue" style="table-layout:fixed">
+<!--                 <div class="table-responsive" id="hacker-list">
+                    <table class="table table-listjs"> -->
+                        <div class="table-filter ">
+                            <input class="search " placeholder="Search "/>
+                        </div>
+<!--                         <div class="table-pagination">
+                            <button type="button" class="btn-tablepage jTablePagePrev">Back</button>
+                            <ul class="pagination"></ul>
+                            <button type="button" class="btn-tablepage jTablePageNext">Forward</button>
+                        </div> -->
+                        <thead>
+                            <tr>
+                                <!-- <th data-field="state" data-checkbox="true"></th> -->
+                                <th> <button type="button" class="sort btn btn-link" data-sort="id">id</button></th>
+                                <th> <button type="button" class="sort btn btn-link" data-sort="name">name</button></th>
+                                <th> <button type="button" class="sort btn btn-link" data-sort="create_uid">create_uid</button></th>
+                                <th> <button type="button" class="sort btn btn-link" data-sort="create_date">create_date</button></th>
+                                <th> <button type="button" class="sort btn btn-link" data-sort="mimetype">mimetype</button></th>
+                                <th> <button type="button" class="sort btn btn-link" data-sort="url">url</button></th>
+                                <th> <button type="button" class="sort btn btn-link" data-sort="weburl">weburl</button></th>
+                                <th> <button type="button" class="sort btn btn-link" data-sort="type">type</button></th>
+                                <th> <button type="button" class="sort btn btn-link" data-sort="public">public</button></th>
+                                <th> <button type="button" class="sort btn btn-link" data-sort="isfavorite">isfavorite</button></th>
+                                <t t-if="mode != 'manager'">
+                                    <th class="" colspan="3" style="text-align: center">Total Count:<t t-esc="count"/></th>
+                                </t>
+                            </tr>
+                        </thead>
+
+                        <tbody class="list">
+                            <t t-foreach="attachments" t-as="attachment">
+                                <tr t-attf-data-id="{{attachment.id}}">
+<!--                                     <td class="bs-checkbox" t-attf-data-id="{{attachment.id}}">
+                                        <input data-index="0" name="btSelectItem" type="checkbox"/>
+                                    </td> -->
+                                    <td class="id" style="width:5%"><t t-esc="attachment.id"/></td>
+                                    <td class="name" style="overflow: hidden;width:20%"><t t-esc="attachment.name"/></td>
+                                    <td class="create_uid" style="overflow: hidden;width:20%">
+                                        <t t-if="attachment.create_uid">
+                                            <t t-esc="attachment.create_uid[1]"/>
+                                        </t>
+                                    </td>
+                                    <td class="create_date" style="overflow: hidden;width:10%"><t t-esc="attachment.create_date"/></td>
+                                    <td class="mimetype" style="overflow: hidden;width:10%"><t t-esc="attachment.mimetype"/></td>
+                                    <td class="url" style="overflow: hidden;width:10%">
+                                        <t t-if="attachment.url">
+                                            <a t-attf-href="{{attachment.weburl}}" target="_blank">Url</a>
+                                        </t>
+                                    </td>
+                                    <td class="weburl" style="overflow: hidden;width:10%">
+                                        <t t-if="attachment.weburl">
+                                            <a t-attf-href="{{attachment.weburl}}" target="_blank">Weburl</a>
+                                        </t>
+                                    </td>
+                                    <td class="type" style="overflow: hidden;width:5%"><t t-esc="attachment.type"/></td>
+                                    <td class="public" style="overflow: hidden;width:5%">
+                                        <t t-if="attachment.public">
+                                            <i class="fa fa-check-square-o token-fa-3x" style="color:green"></i>
+                                        </t>
+                                    </td>
+                                    <td class="isfavorite" style="overflow: hidden;width:5%">
+                                        <t t-if="attachment.is_favorite">
+                                            <i class="fa fa-check-square-o token-fa-3x" style="color:green"></i>
+                                        </t>
+                                    </td>
+                                    <t t-if="mode == 'manager'">
+<!--                                         <td class="remove-list" t-attf-data-id="{{attachment.id}}">
+                                            <button class="btn btn-link"><i class="fa fa-remove"></i>Remove</button>
+                                        </td> -->
+                                    </t>
+                                    <t t-else="">
+                                        <td class="import-list" t-attf-data-id="{{attachment.id}}">
+                                            <button class="btn btn-link" t-attf-data-id="{{attachment.id}}">
+                                                <i class="fa fa-long-arrow-left" t-attf-data-id="{{attachment.id}}"></i>Import</button></td>
+                                        <td class="unlike-list" t-attf-data-id="{{attachment.id}}">
+                                            <t t-if="attachment.is_favorite">
+                                                <button class="btn btn-link" t-attf-data-id="{{attachment.id}}">
+                                                    <i class="fa fa-heart-o" t-attf-data-id="{{attachment.id}}"></i>Unlike</button>
+                                            </t>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </t>
+
+	    <div t-extend="mail.chatter.AttachmentBox">
+            <t t-jquery=".o_chatter_attachment" t-operation="before">
+
+                <!-- views menu -->
+                <nav aria-label="View switcher" class="btn-group o_cp_switch_buttons" style="float:right;z-index:1;padding-top:10px">
+                	<button style="margin-right: 5px;" data-view-type="refresh" aria-label="Refresh" class="btn btn-secondary fa fa-lg fa-refresh o_cp_refresh" title="" type="button" data-original-title="Refresh"></button>
+                    <button data-view-type="kanban" aria-label="View kanban" class="btn btn-secondary fa fa-lg fa-th-large o_cp_switch_kanban active" title=""  type="button" data-original-title="View kanban"></button>   
+                    <button data-view-type="list" aria-label="View list" class="btn btn-secondary fa fa-lg fa-list-ul o_cp_switch_list" title="" type="button" data-original-title="View list"></button>                
+                </nav>
+
+                <!-- control buttons -->
+                <div class="o_control_panel">
+                    <div class="o_cp_left">
+                        <div class="o_cp_buttons">
+                            <div class="o_list_buttons">
+<!--                                 <button class='btn btn-primary btn-sm oe_button_manage' type="button">
+                                    <i class="fa fa-navicon"/></button> -->
+                                <button class='btn btn-primary btn-sm oe_button_control_new' title="Upload new files(file)" aria-label="Upload new files(file)" type="button">
+                                    <i class="fa fa-plus"/></button>
+                                <button class='btn btn-primary btn-sm oe_button_favorites' title="Import from favoriste" aria-label="Import from favoriste" type="button">
+                                    <i class="fa fa-star"/></button>
+                                <button class='btn btn-primary btn-sm oe_button_download_all' title="Download All" aria-label="Download All" type="button">
+                                    <i class="fa fa-download"/></button>
+                                <button class='btn btn-primary btn-sm oe_button_download_filter' title="Download by filter" aria-label="Download by filter" type="button">
+                                    <i class="fa fa-filter"/></button>
+                                <button class='btn btn-primary btn-sm oe_button_webcam_rear' title="WebCam" aria-label="WebCam" type="button">
+                                    <i class="fa fa-camera"/></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- SVG BIG buttons-->
+			<t t-jquery=".o_chatter_attachment_form" t-operation="after">
+				<div style="display:flex" id="icons_menu">
+				<article>
+				    <div id="drive" class="folder_picker" 
+				    	style="width:50px;height:50px;background-image: url(/attachments_manager/static/description/add.svg); background-repeat: no-repeat;">
+				    </div>
+				    <footer>
+				      <h5>My Device</h5>
+				    </footer>
+			    </article>
+			    <article>
+				    <div id="drive" class="link_picker" 
+				    	style="width:50px;height:50px;background-image: url(/attachments_manager/static/description/link.svg); background-repeat: no-repeat;">
+				    </div>
+				    <footer>
+				      <h5>Link</h5>
+				    </footer>
+			    </article>
+			    <article>
+				    <div id="drive" class="camera_picker" 
+				    	style="width:50px;height:50px;background-image: url(/attachments_manager/static/description/ui.svg); background-repeat: no-repeat;">
+				    </div>
+				    <footer>
+				      <h5>Camera</h5>
+				    </footer>
+			    </article>
+			    <article>
+				    <div id="drive" class="screencast_picker" 
+				    	style="width:50px;height:50px;background-image: url(/attachments_manager/static/description/desktop.svg); background-repeat: no-repeat;">
+				    </div>
+				    <footer>
+				      <h5>Screencast</h5>
+				    </footer>
+			    </article>
+				</div>
+			</t>
+		</div>
+
+
+        <!-- Mobile menu attachment multi selection-->
+        <t t-name="mail.SlidebarMulti">
+            <div class="demos-menu" off-canvas="id-4 bottom overlay" 
+                 style="background: rgba(0,0,0,0.5);display:block;transition-duration: 300ms;color:#7C7BAD;margin-bottom: -140px;overflow-x: scroll;">    
+
+                <div style="color: white;display:inline-block;margin-left: 10px;">
+                    <div>
+                        Multi selected
+                    </div>
+
+                    <div>
+                        Files selected(
+                        <b>
+                            <t t-esc='attachments.length'/>
+                        </b>
+                        )
+                    </div>
+
+                </div>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-arrow-down o_attachment_close_cross" t-att-title="'Close menu multi selection'"></span>
+                        </div>
+
+                        <p class="demo-text">Close</p>
+                </div>
+
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-download o_attachment_download" t-att-title="'Download selected'"></span>
+                        </div>
+
+                        <p class="demo-text">Download selected</p>
+                </div>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete selected'"></span>
+                        </div>
+
+                        <p class="demo-text">Delete selected</p>
+                </div>
+
+<!--                  <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-share-alt-square o_attachment_share_cross" t-att-title="'Un Share selected'"></span>
+                        </div>
+
+                        <p class="demo-text">Un Share selected</p>
+                </div>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-share-alt o_attachment_share_cross" t-att-title="'Share selected'"></span>
+                        </div>
+
+                        <p class="demo-text">Share selected</p>
+                </div>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-heart o_attachment_like_cross" t-att-title="'Like selected'"></span>
+                        </div>
+
+                        <p class="demo-text">Like selected</p>
+                </div>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-heart-o o_attachment_unlike_cross" t-att-title="'Unlike all'" ></span>
+                        </div>
+
+                        <p class="demo-text">Unlike selected</p>
+                </div> -->
+
+<!--                 <t t-if='widget'>
+                    <t t-if="widget.currentResModel == 'product.product' || widget.currentResModel == 'product.template'">
+                        <t t-if="!attachment.website_visible">
+                            <div class="demo-block">
+                                    <div class="demo-icon">
+                                        <span class="fa fa-globe o_attachment_website_cross" t-att-title="'Website visible all'" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public" t-att-data-url="attachment.url" t-att-data-website_visible="attachment.website_visible"></span>
+                                    </div>
+
+                                    <p class="demo-text">Website visible</p>
+                            </div>
+                        </t>
+
+                        <t t-else="">
+                            <div class="demo-block">
+                                    <div class="demo-icon">
+                                        <span class="fa fa-lock o_attachment_website_cross" t-att-title="'Website unvisible all'" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public" t-att-data-url="attachment.url" t-att-data-website_visible="attachment.website_visible"></span>
+                                    </div>
+
+                                    <p class="demo-text">Website unvisible</p>
+                            </div>
+                        </t>
+                    </t>
+                </t> -->
+
+            </div>
+        </t>
+           
+        <!-- Mobile menu attachment-->
+        <t t-name="mail.Slidebar">
+            <div class="demos-menu" off-canvas="id-4 bottom overlay" 
+                 style="background: rgba(0,0,0,0.5);display:block;transition-duration: 300ms;color:#7C7BAD;margin-bottom: -140px;overflow-x: scroll;">         
+                
+                <div style="color: white;display:inline-block;margin-left: 10px;">
+                    <div>
+                        Name: 
+                        <t t-esc="attachment.name"/>
+                    </div>
+
+                    <div>
+                        Size: 
+                        <b>
+                            <t t-esc='attachment.file_size'/>
+                        </b>
+                    </div>
+
+                    <div>
+                        Author:
+                        <t t-if="attachment.create_uid">
+                            <t t-esc='attachment.create_uid[1]'/>
+                        </t>
+                    </div>
+
+                    <div>
+                        Date:
+                        <t t-esc='attachment.create_date'/>
+                    </div>
+                </div>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-arrow-down o_attachment_close_cross" t-att-title="'Close menu ' + attachment.name"></span>
+                        </div>
+
+                        <p class="demo-text">Close</p>
+                </div>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-edit o_attachment_edit_cross" t-att-title="'Edit ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"></span>
+                        </div>
+
+                        <p class="demo-text">Edit</p>
+                </div>
+
+                <t t-if="attachment.mimetype.split('/')[0] == 'image' and widget and !widget.mobile">
+                	<div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-magic o_attachment_magic_edit_cross" t-att-title="'Magic edit ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-url="attachment.url"></span>
+                        </div>
+
+                        <p class="demo-text">Magic edit</p>
+	                </div>
+                </t>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-download o_attachment_download" t-att-title="'Download ' + attachment.name" t-att-data-id="attachment.id" t-att-data-url="attachment.url" t-att-data-name="attachment.name"></span>
+                        </div>
+
+                        <p class="demo-text">Download</p>
+                </div>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"></span>
+                        </div>
+
+                        <p class="demo-text">Delete</p>
+                </div>
+
+                 <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-eye o_attachment_view" t-att-title="'Preview Local ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-url="attachment.url" t-att-data-type="attachment.type"></span>
+                        </div>
+
+                        <p class="demo-text">Preview Local</p>
+                </div>
+
+                <!-- <t t-if="attachment.public or attachment.type !='binary'"> -->
+                    <div class="demo-block">
+                            <div class="demo-icon">
+                                <span class="fa fa-windows o_attachment_preview_ms_cross" t-att-title="'Preview MS ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-url="attachment.url"></span>
+                            </div>
+
+                            <p class="demo-text">Preview MS</p>
+                    </div>
+
+                    <div class="demo-block">
+                            <div class="demo-icon">
+                                <span class="fa fa-google o_attachment_preview_google_cross" t-att-title="'Preview Google ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-url="attachment.url"></span>
+                            </div>
+
+                            <p class="demo-text">Preview Google</p>
+                    </div>
+                <!-- </t> -->
+                <t t-if="attachment.public">
+                    <div class="demo-block">
+                            <div class="demo-icon">
+                                <span class="fa fa-share-alt-square o_attachment_share_cross" t-att-title="'Un Share ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public"></span>
+                            </div>
+
+                            <p class="demo-text">Un Share</p>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="demo-block">
+                            <div class="demo-icon">
+                                <span class="fa fa-share-alt o_attachment_share_cross" t-att-title="'Share ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public"></span>
+                            </div>
+
+                            <p class="demo-text">Share</p>
+                    </div>
+                </t>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-chain o_attachment_copy_cross" t-att-title="'Copy link ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public" t-att-data-url="attachment.url"></span>
+                        </div>
+
+                        <p class="demo-text">Copy</p>
+                </div>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-qrcode o_attachment_qrcode_cross" t-att-title="'Get QRcode ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public" t-att-data-url="attachment.url"></span>
+                        </div>
+
+                        <p class="demo-text">QRcode</p>
+                </div>
+
+                <t t-if="!attachment.isfavorite">
+                    <div class="demo-block">
+                            <div class="demo-icon">
+                                <span class="fa fa-heart o_attachment_like_cross" t-att-title="'Like ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public" t-att-data-url="attachment.url"></span>
+                            </div>
+
+                            <p class="demo-text">Like</p>
+                    </div>
+                </t>
+
+                <t t-else="">
+                    <div class="demo-block">
+                            <div class="demo-icon">
+                                <span class="fa fa-heart-o o_attachment_unlike_cross" t-att-title="'Unlike ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public" t-att-data-url="attachment.url"></span>
+                            </div>
+
+                            <p class="demo-text">Unlike</p>
+                    </div>
+                </t>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-info-circle o_attachment_info_cross" t-att-title="'Info ' + attachment.name" t-att-data-id="attachment.id"></span>
+                        </div>
+
+                        <p class="demo-text">Info</p>
+                </div>
+
+                <t t-if='widget'>
+	                <t t-if="widget.currentResModel == 'product.product' || widget.currentResModel == 'product.template'">
+	                    <t t-if="!attachment.website_visible">
+	                        <div class="demo-block">
+	                                <div class="demo-icon">
+	                                    <span class="fa fa-globe o_attachment_website_cross" t-att-title="'Website visible' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public" t-att-data-url="attachment.url" t-att-data-website_visible="attachment.website_visible"></span>
+	                                </div>
+
+	                                <p class="demo-text">Website visible</p>
+	                        </div>
+	                    </t>
+
+	                    <t t-else="">
+	                        <div class="demo-block">
+	                                <div class="demo-icon">
+	                                    <span class="fa fa-lock o_attachment_website_cross" t-att-title="'Website unvisible ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public" t-att-data-url="attachment.url" t-att-data-website_visible="attachment.website_visible"></span>
+	                                </div>
+
+	                                <p class="demo-text">Website unvisible</p>
+	                        </div>
+	                    </t>
+	                </t>
+            	</t>
+
+                <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-external-link o_attachment_open_new_tab_cross" t-att-title="'Open new tab ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public" t-att-data-url="attachment.url" t-att-data-weburl="attachment.weburl"></span>
+                        </div>
+
+                        <p class="demo-text">Open new tab</p>
+                </div>
+
+<!--                 <div class="demo-block">
+                        <div class="demo-icon">
+                            <span class="fa fa-page o_attachment_iframe_cross" t-att-title="'Print file ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public" t-att-data-url="attachment.url"></span>
+                        </div>
+
+                        <p class="demo-text">Google IFrame</p>
+                </div> -->
+
+            </div>
+        </t>
+
+        <t t-extend="mail.chatter.Attachment.Button">
+            <t t-jquery=".o_chatter_button_attachment" t-operation="after">
+<!--                 <ul class="menu-attachments cleafix">
+                  <li class="parent btn-link">
+                    <a href="" style="pointer-events: none;"><span class="fa fa-gear"/></a>
+                    <ul class="children" style="font-size: 1.25em;">
+                      <li><a href="#" class="fa fa-list o_chatter_button_attachment_manager">  Manage</a></li>
+                      <li><a href="#" class="fa fa-download o_chatter_button_attachment_download_all">  Download all</a></li>
+                      <li><a href="#" class="fa fa-chain o_chatter_button_attachment_url">  Add url</a></li>
+                      <li><a href="#" class="fa fa-heart o_chatter_button_attachment_favorites">  Favorites</a></li>
+                    </ul>
+                  </li>
+                </ul>
+
+ -->
+               <div id='some-id' class='drag_and_drop_zone_show'>
+                    <div class="title_drag_and_drop">
+                        <i class="fa fa-clipboard fa-4x"></i>
+                        <h2><span>Drag it here</span>.</h2>
+                    </div>
+                </div>
+            </t>
+        </t>
+
+
+        <t t-extend="mail.AttachmentPreview">
+        	<!-- delete browser cache images-->
+        	<t t-jquery=".o_attachment_image" t-operation="replace">
+        		<t t-if="widget">
+        			<div class="o_attachment_image" t-attf-style="background-image:url('/web/image/#{attachment.id}/160x160/?crop=true&amp;#{widget.magicPreviewId}')"/>
+        		</t>
+                <t t-else="">
+                    <div class="o_attachment_image" t-attf-style="background-image:url('/web/image/#{attachment.id}/160x160/?crop=true')"/>
+                </t>
+        	</t>
+
+        	<!-- Add share icons-->
+        	<t t-jquery=".o_attachment_wrap" t-operation="after">
+        		<t t-if="attachment.public or attachment.type != 'binary'">
+        			<span class="fa fa-1x fa-chain attachments-manager-public"/>
+        		</t>
+                <t t-if="attachment.weburl and attachment.weburl.indexOf('google.com') != -1">
+                    <span class="fa fa-1x attachments-manager-public" style="right:30px;background-image: url(/attachments_manager/static/description/gdrive.svg); background-repeat: no-repeat;background-color: transparent;"/>
+                </t>
+                <t t-if="attachment.weburl and attachment.weburl.indexOf('1drv.ms') != -1">
+                    <span class="fa fa-1x attachments-manager-public" style="right:30px;background-image: url(/attachments_manager/static/description/onedrive.svg); background-repeat: no-repeat;background-color: transparent;"/>
+                </t>
+                <t t-if="attachment.weburl and attachment.weburl.indexOf('dropbox.com') != -1">
+                    <span class="fa fa-1x attachments-manager-public" style="right:30px;background-image: url(/attachments_manager/static/description/dropbox.svg); background-repeat: no-repeat;background-color: transparent;"/>
+                </t>
+                <t t-if="attachment.isfavorite">
+                    <span class="fa fa-1x fa-heart attachments-manager-public" style="top: 0px;color: red;font-size: 20px;background-color: transparent;"/>
+                </t>
+                <t t-if='widget'>
+	                <t t-if="widget.currentResModel == 'product.product' || widget.currentResModel == 'product.template'">
+	                    <t t-if="attachment.website_visible">
+	                         <span class="fa fa-1x fa-globe attachments-manager-public" style="left:0;color: #00A09D;font-size: 20px;background-color: transparent"/>
+	                    </t>
+	                </t>
+            	</t>
+        	</t>
+
+        	<!-- add attr id for click on wrap-->
+            <t t-jquery=".o_attachment_wrap" t-operation="attributes">
+                <attribute name="t-attf-data-id">{{attachment.id}}</attribute>
+                <attribute name="t-attf-data-type">{{attachment.type}}</attribute>
+                <attribute name="t-attf-data-url">{{attachment.url}}</attribute>
+                <attribute name="t-attf-data-weburl">{{attachment.weburl}}</attribute>
+                <attribute name="t-attf-data-isfavorite">{{attachment.isfavorite}}</attribute>
+                <attribute name="t-attf-data-public">{{attachment.public}}</attribute>
+                <attribute name="t-attf-data-website_visible">{{attachment.website_visible}}</attribute>
+            </t>
+
+            <!-- delete icons default, its available in slidebar-->
+            <t t-jquery=".o_attachment_download" t-operation="replace"/>
+            <t t-jquery=".o_attachment_delete_cross" t-operation="replace">
+                <!-- <t t-if="!widget.mobile"> -->
+                    <span t-if="isDeletable" class="fa fa-times o_attachment_delete_cross attachment_manager_icon" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                    <span t-if="isDeletable" class="fa fa-edit text-white o_attachment_edit_cross attachment_manager_icon" t-att-title="'Edit ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                    <span class="fa fa-download o_attachment_download text-white attachment_manager_icon attachment_manager_icon" t-att-title="'Download ' + attachment.name" t-att-data-id="attachment.id" t-att-data-url="attachment.url" t-att-data-name="attachment.name"/>
+                    <span t-if="isDeletable" class="fa fa-windows text-white o_attachment_preview_ms_cross attachment_manager_icon" t-att-title="'Preview MS ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-url="attachment.url"/>
+                    <span t-if="isDeletable" class="fa fa-google text-white o_attachment_preview_google_cross attachment_manager_icon" t-att-title="'Preview Google ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-url="attachment.url"/>
+                        <t t-if="attachment.public">
+                            <span t-if="!editable and isDeletable" class="fa fa-share-alt-square text-white o_attachment_share_cross attachment_manager_icon" t-att-title="'Share ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public"/>
+                        </t>
+                        <t t-else="">
+                            <span t-if="!editable and isDeletable" class="fa fa-share-alt text-white o_attachment_share_cross attachment_manager_icon" t-att-title="'Share ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public"/>
+                        </t>
+<!--                 </t>
+                <t t-else="">
+                    <span t-if="!editable and isDeletable" class="fa fa-navicon o_attachment_sidebar " t-att-title="'Sidebar ' + attachment.name"    t-att-data-id="attachment.id" t-att-data-name="attachment.name"> Slidebar menu </span>
+                </t> -->
+            </t>
+<!--             <t t-jquery=".o_attachment_wrap" t-operation="before">
+                <t t-if="widget and widget.mobile">
+                    <span t-if="!editable and isDeletable" class="fa fa-navicon o_attachment_sidebar attachment_manager_icon_mobile" t-att-title="'Sidebar ' + attachment.name"    t-att-data-id="attachment.id" t-att-data-name="attachment.name" style="font-size: 20px;"></span>
+                </t>
+            </t> -->
+
+            <!-- add additional info in attachment-->
+            <t t-jquery=".o_attachment_title" t-operation="append">
+                <div>
+                    <b>
+                        <t t-esc='attachment.file_size'/>
+                    </b>
+                </div>
+                <div>
+                    <t t-if="attachment.create_uid">
+                        <t t-esc='attachment.create_uid[1]'/>
+                    </t>
+                </div>
+                <div>
+                    <t t-esc='attachment.create_date'/>
+                </div>
+            </t>
+        </t>
+
+
+        <t t-extend="mail.Attachment">
+        	<t t-jquery=".o_attachment_wrap" t-operation="after">
+        		<t t-if="attachment.public or attachment.type != 'binary' ">
+        			<span class="fa fa-1x fa-chain attachments-manager-public"/>
+        		</t>
+                <t t-if="attachment.weburl and attachment.weburl.indexOf('google.com') != -1">
+                    <span class="fa fa-1x attachments-manager-public" style="right:30px;background-image: url(/attachments_manager/static/description/gdrive.svg); background-repeat: no-repeat;background-color: transparent;"/>
+                </t>
+                <t t-if="attachment.weburl and attachment.weburl.indexOf('1drv.ms') != -1">
+                    <span class="fa fa-1x attachments-manager-public" style="right:30px;background-image: url(/attachments_manager/static/description/onedrive.svg); background-repeat: no-repeat;background-color: transparent;"/>
+                </t>
+                <t t-if="attachment.weburl and attachment.weburl.indexOf('dropbox.com') != -1">
+                    <span class="fa fa-1x attachments-manager-public" style="right:30px;background-image: url(/attachments_manager/static/description/dropbox.svg); background-repeat: no-repeat;background-color: transparent;"/>
+                </t>
+                <t t-if="attachment.isfavorite">
+                    <span class="fa fa-1x fa-heart attachments-manager-public" style="top: 0px;color: red;font-size: 20px;background-color: transparent;"/>
+                </t>
+                <t t-if='widget'>
+	                <t t-if="widget.currentResModel == 'product.product' || widget.currentResModel == 'product.template'">
+	                    <t t-if="attachment.website_visible">
+	                         <span class="fa fa-1x fa-globe attachments-manager-public" style="left:0;color: #00A09D;font-size: 20px;background-color: transparent"/>
+	                    </t>
+	                </t>
+            	</t>
+        	</t>
+            <t t-jquery=".o_attachment_wrap" t-operation="attributes">
+                <attribute name="t-attf-data-id">{{attachment.id}}</attribute>
+                <attribute name="t-attf-data-type">{{attachment.type}}</attribute>
+                <attribute name="t-attf-data-url">{{attachment.url}}</attribute>
+                <attribute name="t-attf-data-weburl">{{attachment.weburl}}</attribute>
+                <attribute name="t-attf-data-isfavorite">{{attachment.isfavorite}}</attribute>
+                <attribute name="t-attf-data-public">{{attachment.public}}</attribute>
+                <attribute name="t-attf-data-website_visible">{{attachment.website_visible}}</attribute>
+            </t>
+            <t t-jquery=".o_attachment_download" t-operation="replace"/>
+            <t t-jquery=".o_attachment_delete_cross" t-operation="replace">
+                <div class="o_attachment_view">
+<!--                     <t t-if="widget and !widget.mobile"> -->
+                        <span t-if="!editable and isDeletable" class="fa fa-times o_attachment_delete_cross attachment_manager_icon" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                        <span t-if="!editable and isDeletable" class="fa fa-edit o_attachment_edit_cross attachment_manager_icon" t-att-title="'Edit ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                        <span t-if="!editable and isDeletable" class="fa fa-download o_attachment_download attachment_manager_icon" t-att-title="'Download ' + attachment.name" t-att-data-id="attachment.id" t-att-data-url="attachment.url" t-att-data-name="attachment.name"/>
+                        <span t-if="isDeletable" class="fa fa-windows o_attachment_preview_ms_cross attachment_manager_icon" t-att-title="'Preview MS' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-url="attachment.url"/>
+                        <span t-if="isDeletable" class="fa fa-google o_attachment_preview_google_cross attachment_manager_icon" t-att-title="'Preview Google ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-url="attachment.url"/>
+                        <t t-if="attachment.public">
+                            <span t-if="!editable and isDeletable" class="fa fa-share-alt-square o_attachment_share_cross attachment_manager_icon" t-att-title="'Share ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public"/>
+                        </t>
+                        <t t-else="">
+                            <span t-if="!editable and isDeletable" class="fa fa-share-alt o_attachment_share_cross attachment_manager_icon" t-att-title="'Share ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name" t-att-data-public="attachment.public"/>
+                        </t>
+  <!--                   </t>
+                    <t t-else="">
+                        <span t-if="!editable and isDeletable" class="fa fa-navicon o_attachment_sidebar attachment_manager_icon_mobile" t-att-title="'Sidebar ' + attachment.name"    t-att-data-id="attachment.id" t-att-data-name="attachment.name"></span>
+                    </t> -->
+                </div>
+            </t>
+
+            <t t-jquery="t[t-set='has_preview']" t-operation="replace">
+                <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf' 
+                    or attachment.mimetype == 'application/vnd.oasis.opendocument.spreadsheet'
+                    or attachment.mimetype == 'application/vnd.oasis.opendocument.text'"/>
+            </t>
+
+            <t t-jquery=".caption.small" t-operation="append">
+                <b>
+                    <t t-esc='attachment.file_size'/>
+                </b>
+                <div>
+                    <t t-if="attachment.create_uid">
+                        <t t-esc='attachment.create_uid[1]'/>
+                    </t>
+                    <t t-esc='attachment.create_date'/>
+                </div>
+            </t>
+        </t>
+<!-- <template id="webcam_id"> -->
+        <div t-name="WebCamDialog" id="WebCamModal">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-5 live_webcam_outer_div">
+                            <div id="live_webcam"/>
+                        </div>
+                        <div class="col-md-2 mt64 direction_icon fa fa-angle-right fa-8x"/>
+                        <div class="col-md-5 webcam_result_outer_div">
+                            <div id="webcam_result"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- </template> -->
+
+        <div t-name="AttachmentVideoPreview" id="AttachmentVideoPreview">
+            <div class="container-fluid">
+                <video controls="controls" style="margin-left: auto;margin-right: auto;display: block;width:100%;height:100%">
+                    <source t-att-data-title="widget.filename" t-att-src="widget.url"/>
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+
+        <div t-name="AttachmentAudioPreview" id="AttachmentAudioPreview">
+            <div class="visualizer">
+                <canvas width="200" height="100" />
+            </div>
+            <audio t-att-data-title="widget.filename" controls="controls" style="width:100%">
+                <source t-att-src="widget.url"/>
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div t-name="AttachmentTextPreview" id="AttachmentTextPreview">
+                <div class="code-controls">
+                    <select class="code-lang">
+                        <option value="default">Default</option>
+                        <option value="1c">1C</option>
+                        <option value="abnf">ABNF</option>
+                        <option value="accesslog">Access logs</option>
+                        <option value="ada">Ada</option>
+                        <option value="armasm, arm">ARM assembler</option>
+                        <option value="avrasm">AVR assembler</option>
+                        <option value="actionscript, as">ActionScript</option>
+                        <option value="apache, apacheconf">Apache</option>
+                        <option value="applescript, osascript">AppleScript</option>
+                        <option value="asciidoc, adoc">AsciiDoc</option>
+                        <option value="aspectj">AspectJ</option>
+                        <option value="autohotkey">AutoHotkey</option>
+                        <option value="autoit">AutoIt</option>
+                        <option value="awk, mawk, nawk, gawk">Awk</option>
+                        <option value="axapta">Axapta</option>
+                        <option value="bash, sh, zsh">Bash</option>
+                        <option value="basic">Basic</option>
+                        <option value="bnf">BNF</option>
+                        <option value="brainfuck, bf">Brainfuck</option>
+                        <option value="cs, csharp">C#</option>
+                        <option value="cpp, c, cc, h, c++, h++, hpp">C++</option>
+                        <option value="cal">C/AL</option>
+                        <option value="cos, cls">Cache Object Script</option>
+                        <option value="cmake, cmake.in">CMake</option>
+                        <option value="coq">Coq</option>
+                        <option value="csp">CSP</option>
+                        <option value="css">CSS</option>
+                        <option value="capnproto, capnp">Cap’n Proto</option>
+                        <option value="clojure, clj">Clojure</option>
+                        <option value="coffeescript, coffee, cson, iced">CoffeeScript</option>
+                        <option value="crmsh, crm, pcmk">Crmsh</option>
+                        <option value="crystal, cr">Crystal</option>
+                        <option value="d">D</option>
+                        <option value="dns, zone, bind">DNS Zone file</option>
+                        <option value="dos, bat, cmd">DOS</option>
+                        <option value="dart">Dart</option>
+                        <option value="delphi, dpr, dfm, pas, pascal, freepascal, lazarus, lpr, lfm">Delphi</option>
+                        <option value="diff, patch">Diff</option>
+                        <option value="django, jinja">Django</option>
+                        <option value="dockerfile, docker">Dockerfile</option>
+                        <option value="dsconfig">dsconfig</option>
+                        <option value="dts">DTS (Device Tree)</option>
+                        <option value="dust, dst">Dust</option>
+                        <option value="ebnf">EBNF</option>
+                        <option value="elixir">Elixir</option>
+                        <option value="elm">Elm</option>
+                        <option value="erlang, erl">Erlang</option>
+                        <option value="excel, xls, xlsx">Excel</option>
+                        <option value="fsharp, fs">F#</option>
+                        <option value="fix">FIX</option>
+                        <option value="fortran, f90, f95">Fortran</option>
+                        <option value="gcode, nc">G-Code</option>
+                        <option value="gams, gms">Gams</option>
+                        <option value="gauss, gss">GAUSS</option>
+                        <option value="gherkin">Gherkin</option>
+                        <option value="go, golang">Go</option>
+                        <option value="golo, gololang">Golo</option>
+                        <option value="gradle">Gradle</option>
+                        <option value="groovy">Groovy</option>
+                        <option value="xml, html, xhtml, rss, atom, xjb, xsd, xsl, plist">HTML, XML</option>
+                        <option value="http, https">HTTP</option>
+                        <option value="haml">Haml</option>
+                        <option value="handlebars, hbs, html.hbs, html.handlebars">Handlebars</option>
+                        <option value="haskell, hs">Haskell</option>
+                        <option value="haxe, hx">Haxe</option>
+                        <option value="hy, hylang">Hy</option>
+                        <option value="ini">Ini</option>
+                        <option value="inform7, i7">Inform7</option>
+                        <option value="irpf90">IRPF90</option>
+                        <option value="json">JSON</option>
+                        <option value="java, jsp">Java</option>
+                        <option value="javascript, js, jsx">JavaScript</option>
+                        <option value="leaf">Leaf</option>
+                        <option value="lasso, ls, lassoscript">Lasso</option>
+                        <option value="less">Less</option>
+                        <option value="ldif">LDIF</option>
+                        <option value="lisp">Lisp</option>
+                        <option value="livecodeserver">LiveCode Server</option>
+                        <option value="livescript, ls">LiveScript</option>
+                        <option value="lua">Lua</option>
+                        <option value="makefile, mk, mak">Makefile</option>
+                        <option value="markdown, md, mkdown, mkd">Markdown</option>
+                        <option value="mathematica, mma">Mathematica</option>
+                        <option value="matlab">Matlab</option>
+                        <option value="maxima">Maxima</option>
+                        <option value="mel">Maya Embedded Language</option>
+                        <option value="mercury">Mercury</option>
+                        <option value="mizar">Mizar</option>
+                        <option value="mojolicious">Mojolicious</option>
+                        <option value="monkey">Monkey</option>
+                        <option value="moonscript, moon">Moonscript</option>
+                        <option value="n1ql">N1QL</option>
+                        <option value="nsis">NSIS</option>
+                        <option value="nginx, nginxconf">Nginx</option>
+                        <option value="nimrod, nim">Nimrod</option>
+                        <option value="nix">Nix</option>
+                        <option value="ocaml, ml">OCaml</option>
+                        <option value="objectivec, mm, objc, obj-c">Objective C</option>
+                        <option value="glsl">OpenGL Shading Language</option>
+                        <option value="openscad, scad">OpenSCAD</option>
+                        <option value="ruleslanguage">Oracle Rules Language</option>
+                        <option value="oxygene">Oxygene</option>
+                        <option value="pf, pf.conf">PF</option>
+                        <option value="php, php3, php4, php5, php6">PHP</option>
+                        <option value="parser3">Parser3</option>
+                        <option value="perl, pl, pm">Perl</option>
+                        <option value="pony">Pony</option>
+                        <option value="powershell, ps">PowerShell</option>
+                        <option value="processing">Processing</option>
+                        <option value="prolog">Prolog</option>
+                        <option value="protobuf">Protocol Buffers</option>
+                        <option value="puppet, pp">Puppet</option>
+                        <option value="python, py, gyp">Python</option>
+                        <option value="profile">Python profiler results</option>
+                        <option value="k, kdb">Q</option>
+                        <option value="qml">QML</option>
+                        <option value="r">R</option>
+                        <option value="rib">RenderMan RIB</option>
+                        <option value="rsl">RenderMan RSL</option>
+                        <option value="graph, instances">Roboconf</option>
+                        <option value="ruby, rb, gemspec, podspec, thor, irb">Ruby</option>
+                        <option value="rust, rs">Rust</option>
+                        <option value="scss">SCSS</option>
+                        <option value="sql">SQL</option>
+                        <option value="p21, step, stp">STEP Part 21</option>
+                        <option value="scala">Scala</option>
+                        <option value="scheme">Scheme</option>
+                        <option value="scilab, sci">Scilab</option>
+                        <option value="shell, console">Shell</option>
+                        <option value="smali">Smali</option>
+                        <option value="smalltalk, st">Smalltalk</option>
+                        <option value="stan">Stan</option>
+                        <option value="stata">Stata</option>
+                        <option value="stylus, styl">Stylus</option>
+                        <option value="subunit">SubUnit</option>
+                        <option value="swift">Swift</option>
+                        <option value="tap">Test Anything Protocol</option>
+                        <option value="tcl, tk">Tcl</option>
+                        <option value="tex">TeX</option>
+                        <option value="thrift">Thrift</option>
+                        <option value="tp">TP</option>
+                        <option value="twig, craftcms">Twig</option>
+                        <option value="typescript, ts">TypeScript</option>
+                        <option value="vbnet, vb">VB.Net</option>
+                        <option value="vbscript, vbs">VBScript</option>
+                        <option value="vhdl">VHDL</option>
+                        <option value="vala">Vala</option>
+                        <option value="verilog, v">Verilog</option>
+                        <option value="vim">Vim Script</option>
+                        <option value="x86asm">x86 Assembly</option>
+                        <option value="xl, tao">XL</option>
+                        <option value="xpath, xq">XQuery</option>
+                        <option value="zephir, zep">Zephir</option>
+                    </select>
+                </div>
+                <pre>
+                    <code class="code-view" />
+                </pre>
+        </div>
+
+        <div t-name="QRcodePreview" id="QRcodePreview">
+        	<h1>Filename: <t t-esc="widget.filename"/></h1>
+        	<div style="margin: auto;width: max-content;" id="qrcode"></div>
+        </div>
+
+        <div t-name="DocxPreview" id="DocxPreview">
+            <h1>Filename: <t t-esc="widget.filename"/></h1>
+            <page size="A4">
+                <div style="margin: 20px; width: auto;" id="docx">
+                    <t t-raw="widget.html"/>
+                </div>
+            </page>
+        </div>
+
+        <div t-name="XlsxPreview" id="XlsxPreview">
+            <h1>Filename: <t t-esc="widget.filename"/></h1>
+<!--             <page size="A4"> -->
+                <div style="margin: 20px; width: auto;" id="xlsx">
+                    <!-- <t t-raw="widget.html"/> -->
+                </div>
+<!--             </page> -->
+        </div>
+
+        <div t-name="SplitScreenPreview" id="SplitScreenPreview">
+            <div class="split-am right-am">
+                <div class="centered-am">
+                    <a class="close-button-split-am" href="#">Close</a>
+                    <iframe t-att-src="url" style="width:100%;height:100%"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div t-name="AttachmentInfo" id="AttachmentInfo">
+            <div class="col-xs-12 col-12 o_form_view ">
+
+                <div class="row mb12 col-12">
+                    <label class="col-md-2 o_form_label">Filename</label>
+                    <div class="col-xs-12" style="margin-left: 30px;border-left: 1px solid #bbbbbb;padding-left: 10px;">	<t t-esc="attachment.name"/>         </div>
+                </div>
+
+                <div class="row mb12 col-12">
+                    <label class="col-md-2 o_form_label">Create date</label>
+                    <div class="col-xs-12" style="margin-left: 30px;border-left: 1px solid #bbbbbb;padding-left: 10px;">	<t t-esc="attachment.create_date"/>         </div>
+                </div>
+
+<!--                 <div class="row mb8">
+                    <div class="col-xs-2">Create uid</div>
+                    <div class="col-xs-10">	<t t-esc="attachment.create_uid[1]"/>         </div>
+                </div> -->
+
+                <div class="row mb12 col-12">
+                    <label class="col-md-2 o_form_label">File_size</label>
+                    <div class="col-xs-12" style="margin-left: 30px;border-left: 1px solid #bbbbbb;padding-left: 10px;">	<t t-esc="attachment.file_size"/>         </div>
+                </div>
+
+                <div class="row mb12 col-12">
+                    <label class="col-md-2 o_form_label">Mimetype</label>
+                    <div class="col-xs-12" style="margin-left: 30px;border-left: 1px solid #bbbbbb;padding-left: 10px;">	<t t-esc="attachment.mimetype"/>         </div>
+                </div>
+
+                <div class="row mb12 col-12">
+                    <label class="col-md-2 o_form_label">Id</label>
+                    <div class="col-xs-12" style="margin-left: 30px;border-left: 1px solid #bbbbbb;padding-left: 10px;">	<t t-esc="attachment.id"/>         </div>
+                </div>
+
+                <div class="row mb12 col-12">
+                    <label class="col-md-2 o_form_label">Favorite</label>
+                    <div class="col-xs-12" style="margin-left: 30px;border-left: 1px solid #bbbbbb;padding-left: 10px;">	<t t-esc="attachment.isfavorite"/>         </div>
+                </div>
+
+                <div class="row mb12 col-12">
+                    <label class="col-md-2 o_form_label">Public</label>
+                    <div class="col-xs-12" style="margin-left: 30px;border-left: 1px solid #bbbbbb;padding-left: 10px;">	<t t-esc="attachment.public"/>         </div>
+                </div>
+
+                <div class="row mb12 col-12">
+                    <label class="col-md-2 o_form_label">Type</label>
+                    <div class="col-xs-12" style="margin-left: 30px;border-left: 1px solid #bbbbbb;padding-left: 10px;">	<t t-esc="attachment.type"/>         </div>
+                </div>
+
+               
+                <div class="row mb12 col-12">
+                    <label class="col-md-2 o_form_label">Url</label>
+                    <div class="col-xs-12" style="margin-left: 30px;border-left: 1px solid #bbbbbb;padding-left: 10px;">	<t t-esc="attachment.url"/>         </div>
+                </div>
+
+                <div class="row mb12 col-12">
+                    <label class="col-md-2 o_form_label">Website visible</label>
+                    <div class="col-xs-12" style="margin-left: 30px;border-left: 1px solid #bbbbbb;padding-left: 10px;">	<t t-esc="attachment.website_visible"/>         </div>
+                </div>
+
+                <div class="row mb12 col-12">
+                    <label class="col-md-2 o_form_label">Weburl</label>
+                    <div class="col-xs-12" style="margin-left: 30px;border-left: 1px solid #bbbbbb;padding-left: 10px;">	<t t-esc="attachment.weburl"/>         </div>
+                </div>
+            </div>
+        </div>
+
+    </templates>

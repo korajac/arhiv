@@ -1,0 +1,2 @@
+debian/zira.conf /etc/zira
+README.md /usr/share/doc/zira

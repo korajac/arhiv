@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -e
+
+ZIRA_LIB_DIR=/var/lib/zira
+ZIRA_USER="zira"
+ZIRA_GROUP="zira"
+
+case "${1}" in
+    remove)
+        deluser --quiet --system $ZIRA_USER || true
+        delgroup --quiet --system --only-if-empty $ZIRA_GROUP || true
+        ;;
+
+    purge)
+        if [ -d "$ZIRA_LIB_DIR" ]; then
+            rm -rf $ZIRA_LIB_DIR
+        fi
+        ;;
+
+    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+        ;;
+
+esac
+
+#DEBHELPER#
+
+exit 0

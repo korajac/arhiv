@@ -1,0 +1,162 @@
+.ocr_result{
+  max-width: 300px;
+  margin: 50px auto;
+  padding-top: 3%;
+}
+.ocr_loader{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -30px;
+}
+.ocr_loader_time{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -50px;
+  width: 100px;
+  color: #0088ad;
+}
+.ocr_next{
+  display: none;
+}
+
+
+/*
+  Set the color of the icon
+*/
+/* svg path,
+svg rect{
+  fill: #00ff0d;
+} */
+
+
+.ocr_templates{
+  padding-left: 10%;
+  padding-top: 5%;
+  display: grid;
+  padding-bottom: 5%;
+}
+.ocr_checkbox {
+	/* display: block; */
+	position: relative;
+	padding-left: 32px;
+	margin-bottom: 12px;
+	cursor: pointer;
+	font-size: 22px;
+	user-select: none;
+	transition: padding-left 0.15s ease-in-out;
+}
+
+.ocr_checkbox:hover {
+	padding-left: 35px;
+}
+
+.ocr_checkbox input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.row.lists [data-icon] {
+	position: absolute;
+	top: 2px;
+	left: 0;
+	height: 25px;
+	width: 25px;
+	color: #78909c;
+}
+
+.ocr_checkbox:hover [data-icon] {
+	color: #81d4fa;
+}
+
+.ocr_checkbox:hover,
+.ocr_checkbox.checked,
+.ocr_checkbox.checked [data-icon] {
+	color: #03a9f4;
+}
+
+.ocr_checkbox.green:hover [data-icon] {
+	color: #66ef90;
+}
+
+.ocr_checkbox.green:hover,
+.ocr_checkbox.green.checked,
+.ocr_checkbox.green.checked [data-icon] {
+	color: #03d343;
+}
+
+
+.ocr_control {
+    /* display: block; */
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  .ocr_control input {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+  }
+  .ocr_control__indicator {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background: #e6e6e6;
+  }
+  .ocr_control--radio .ocr_control__indicator {
+    border-radius: 50%;
+  }
+  .ocr_control:hover input ~ .ocr_control__indicator,
+  .ocr_control input:focus ~ .ocr_control__indicator {
+    background: #ccc;
+  }
+  .ocr_control input:checked ~ .ocr_control__indicator {
+    background: #2aa1c0;
+  }
+  .ocr_control:hover input:not([disabled]):checked ~ .ocr_control__indicator,
+  .ocr_control input:checked:focus ~ .ocr_control__indicator {
+    background: #0e647d;
+  }
+  .ocr_control input:disabled ~ .ocr_control__indicator {
+    background: #e6e6e6;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .ocr_control__indicator:after {
+    content: '';
+    position: absolute;
+    display: none;
+  }
+  .ocr_control input:checked ~ .ocr_control__indicator:after {
+    display: block;
+  }
+  .ocr_control--checkbox .ocr_control__indicator:after {
+    left: 8px;
+    top: 4px;
+    width: 3px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .ocr_control--checkbox input:disabled ~ .ocr_control__indicator:after {
+    border-color: #7b7b7b;
+  }
+  .ocr_control--radio .ocr_control__indicator:after {
+    left: 7px;
+    top: 7px;
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .ocr_control--radio input:disabled ~ .ocr_control__indicator:after {
+    background: #7b7b7b;
+  }
+  

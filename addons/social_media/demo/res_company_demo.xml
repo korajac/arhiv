@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zira>
+    <record id="base.main_company" model="res.company">
+        <field name="social_twitter">https://twitter.com/Zira</field>
+        <field name="social_facebook">https://www.facebook.com/Zira</field>
+        <field name="social_googleplus">https://plus.google.com/+Ziraapps</field>
+        <field name="social_linkedin">https://www.linkedin.com/company/zira</field>
+        <field name="social_youtube">https://www.youtube.com/user/Korajaconline</field>
+        <field name="social_github">https://github.com/zira</field>
+        <field name="social_instagram">https://www.instagram.com/explore/tags/zira/</field>
+    </record>
+</zira>

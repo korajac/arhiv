@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zira>
+    <data>
+        <!-- <record id="action_download_zip" model="ir.actions.server">
+            <field name="name">Download zip</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="base.model_ir_attachment" />
+            <field name="binding_model_id" ref="base.model_ir_attachment" />
+            <field name="state">code</field>
+            <field name="code"> action = env['ir.attachment'].browse(records.ids).download_filter()</field>
+        </record> -->
+
+<!--         <record id="attachments_manager_default_filter" model="ir.ui.view">
+            <field name="name">attachments.manager.default.filter</field>
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <search>
+                    <filter string="Current record" name="am" domain="[('res_id', '=', default_res_id),('res_model','=',default_res_model)]"/>
+                </search>
+            </field>
+        </record>
+ -->
+        <record model='ir.actions.act_window' id='action_ir_attachment_add_url'>
+            <field name='name'>Add URL</field>
+            <field name='res_model'>ir.attachment.add_url</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='target'>new</field>
+            <field name='view_mode'>form</field>
+        </record>
+
+        <record model="ir.ui.view" id="view_ir_attachment_add_url_form">
+            <field name="name">ir.attachment.add_url.form</field>
+            <field name="model">ir.attachment.add_url</field>
+            <field name="arch" type="xml">
+                <form string="Add URL">
+                    <group>
+                        <field name="name"/>
+                        <field name="url" widget="url"/>
+                        <field name="copy"/>
+                    </group>
+                    <footer>
+                        <button name="action_add_url" string="Add" class="oe_highlight" type="object" />
+                        or
+                        <button special="cancel" string="Cancel" class="oe_link" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_ir_attachment_tree_manager">
+            <field name="name">ir.attachment.tree.manager</field>
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <tree string="Attachments manager">
+                    <button name="delete_favorites" string="Delete from favorite" class="oe_highlight" type="object"/>
+                    <button name="add_current_action" string="Add to current record" class="oe_highlight" type="object"/>
+                    <field name="name"/>
+                    <field name="datas" filename="name" attrs="{'invisible':[('type','=','url')]}"/>
+                    <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
+                    <field name="mimetype" groups="base.group_no_one"/>
+                    <field name="res_model"/>
+                    <field name="res_field"/>
+                    <field name="res_id"/>
+                    <field name="type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="create_uid"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+        <record model='ir.actions.act_window' id='action_ir_attachment_tree_manager'>
+            <field name='name'>Attachments manager</field>
+            <field name='res_model'>ir.attachment</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='target'>new</field>
+            <field name="domain">[('res_model', '=', context.get('active_res_model')),('res_id', '=', context.get('active_res_id'))]</field>
+            <field name='view_mode'>tree,form</field>
+            <field name="view_id" ref="view_ir_attachment_tree_manager"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new attachment
+                </p><p>
+                    You may create attachments drag and drop.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</zira>

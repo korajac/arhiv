@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zira>
+    <data>
+        <record id="base.partner_root" model="res.partner">
+            <field name="name">ZiraBot</field>
+            <field name="email">zirabot@example.com</field>
+            <field name="image" type="base64" file="mail/static/src/img/zirabot.png"/>
+        </record>
+    </data>
+</zira>

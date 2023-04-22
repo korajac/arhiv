@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2021 Shurshilov Artem <shurshilov.a@yandex.ru> -->
+<zira>
+    <data>
+        <template id="assets_backend" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <!-- <link rel="stylesheet" href="/ocr/static/src/css/material-ui.css"/> -->
+                <link rel="stylesheet" href="/ocr/static/src/css/form_ocr_button.css"/>
+                <link rel="stylesheet" href="/ocr/static/src/css/ocr_progress_steps.css"/>
+                <link rel="stylesheet" href="/ocr/static/src/css/ocr_tmpl_radio.css"/>
+
+                <script type="text/javascript" src="/ocr/static/src/libs/pdf-lib.js"/>
+                <script type="text/javascript" src="/ocr/static/src/libs/webcam.js"/>
+                <!-- <script type="text/javascript" src="/ocr/static/src/libs/sweetalert2.min.js"/> -->
+
+                <script type="text/javascript" src="/ocr/static/src/js/ocr_dialog.js"/>
+                <script type="text/javascript" src="/ocr/static/src/js/ocr_dialog_confirm.js"/>
+                <script type="text/javascript" src="/ocr/static/src/js/ocr_dialog_select_tmpl.js"/>
+                <script type="text/javascript" src="/ocr/static/src/js/form_ocr_button.js"/>
+            </xpath>
+        </template>
+
+    </data>
+</zira>

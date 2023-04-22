@@ -1,0 +1,14 @@
+[Unit]
+Description=Zira Open Source ERP and CRM
+After=network.target
+
+[Service]
+Type=simple
+User=zira
+Group=zira
+ExecStart=/usr/bin/zira --config /etc/zira/zira.conf --logfile /var/log/zira/zira-server.log
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target
+

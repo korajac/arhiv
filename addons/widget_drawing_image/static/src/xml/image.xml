@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+<t t-name="FieldBinaryImageDrawingFields">
+    <div class="o_field_image" aria-atomic="true">
+        <t t-if="widget.mode !== 'readonly'">
+            <div class="o_form_image_controls">
+                <span class="o_form_binary_progress">Uploading...</span>
+                <t t-call="HiddenInputFile">
+                    <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                </t>
+            </div>
+        </t>
+    </div>
+</t>
+<t t-name="FieldBinaryImageDrawingFields-img">
+    <div id="container_drawing_fields">
+        <button class="btn btn-secondary fa fa-pencil o_select_file_button" title="Edit" aria-label="Edit"/>
+        <button class="btn btn-secondary fa fa-trash-o o_clear_file_button" title="Clear" aria-label="Clear"/>
+        <button class="btn btn-secondary fa fa-plus" id="zoomin"></button>
+        <button class="btn btn-secondary fa fa-minus" id="zoomout"></button>
+        <button class="btn btn-secondary fa fa-save" id="save_json">save JSON</button>
+        <button class="btn btn-secondary fa fa-rotate-left" id="load_json">load JSON</button>
+        <button class="btn btn-secondary fa fa-object-ungroup" id="add_field">add field object</button>
+        <button class="btn btn-secondary fa fa-refresh" id="flip">flip</button>
+        <button class="btn btn-secondary fa fa-eye" id="ocr_test">OCR test</button>
+        <canvas id="canvas" width="400" height="400" style="border:1px solid red"/>
+        <textarea id="json" class="form-control o_ActivityMarkDonePopover_feedback"
+        rows="5" placeholder="Json present" />
+    </div>
+</t>
+<!-- <t t-extend="FieldBinaryImage-img">
+        <t t-jquery=".img" t-operation="replace">
+        <button class="btn btn-secondary fa fa-plus" id="zoomin"></button>
+        <button class="btn btn-secondary fa fa-minus" id="zoomout"></button>
+        <button class="btn btn-secondary fa fa-save" id="save_json">save JSON</button>
+        <button class="btn btn-secondary fa fa-rotate-left" id="load_json">load JSON</button>
+        <canvas id="canvas" width="400" height="400" style="border:1px solid red"/>
+        <textarea id="json" class="form-control o_ActivityMarkDonePopover_feedback"
+        rows="5" placeholder="Json present" />
+        </t>
+</t> -->
+
+</template>

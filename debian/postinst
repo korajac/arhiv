@@ -1,0 +1,34 @@
+#!/bin/sh
+
+set -e
+
+ZIRA_CONFIGURATION_FILE=/etc/zira/zira.conf
+ZIRA_GROUP="zira"
+ZIRA_DATA_DIR=/var/lib/zira
+ZIRA_LOG_DIR=/var/log/zira
+ZIRA_USER="zira"
+
+case "${1}" in
+    configure)
+        if ! getent passwd | grep -q "^zira:"; then
+            adduser --system --home $ZIRA_DATA_DIR --quiet --group $ZIRA_USER
+        fi
+        # Register "$ZIRA_USER" as a postgres user with "Create DB" role attribute
+        su - postgres -c "createuser -d -R -S $ZIRA_USER" 2> /dev/null || true
+        # Configuration file
+        chown $ZIRA_USER:$ZIRA_GROUP $ZIRA_CONFIGURATION_FILE
+        chmod 0640 $ZIRA_CONFIGURATION_FILE
+        # Log
+        mkdir -p $ZIRA_LOG_DIR
+        chown $ZIRA_USER:$ZIRA_GROUP $ZIRA_LOG_DIR
+        chmod 0750 $ZIRA_LOG_DIR
+        # Data dir
+        chown $ZIRA_USER:$ZIRA_GROUP $ZIRA_DATA_DIR
+        ;;
+    *)
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

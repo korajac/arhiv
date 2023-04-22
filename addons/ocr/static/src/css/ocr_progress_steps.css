@@ -1,0 +1,64 @@
+/* Modified from https://www.kodhus.com/css-only-step-progress-bar/ */
+.container_ocr_steps {
+    /* margin: 100px auto; */
+    background: #999;
+    box-shadow: -1px 0 5px #000;
+    width: 100%;
+}
+.progressbar_ocr_steps {
+    counter-reset: step;
+    margin-left: -45px;
+}
+.progressbar_ocr_steps li {
+    list-style-type: none;
+    width: 25%;
+    float: left;
+    font-size: 12px;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+    color: #7d7d7d;
+}
+.progressbar_ocr_steps li:before {
+    width: 30px;
+    height: 30px;
+    content: counter(step);
+    counter-increment: step;
+    line-height: 30px;
+    border: 2px solid #7d7d7d;
+    display: block;
+    text-align: center;
+    margin: 0 auto 10px auto;
+    border-radius: 50%;
+    background-color: #7d7d7d;
+    color: white;
+}
+.progressbar_ocr_steps li:after {
+    width: 100%;
+    height: 8px;
+    content: '';
+    position: absolute;
+    background-color: #7d7d7d;
+    top: 12px;
+    left: -50%;
+    z-index: -100;
+}
+.progressbar_ocr_steps li:first-child:after {
+    content: none;
+}
+.progressbar_ocr_steps li.ocr_active, .progressbar_ocr_steps li.ocr_done {
+    color: #0088ad;
+}
+/*.progressbar_ocr_steps li.ocr_active:before, .progressbar_ocr_steps li.ocr_done:before {
+    border-color: #0088ad;
+    background-color: #0088ad;
+}*/
+.progressbar_ocr_steps li.ocr_done:before {
+    content: "\2714";
+}
+.progressbar_ocr_steps li.ocr_done + li:after {
+    background-color: #0088ad;
+}
+.progressbar_ocr_steps li {
+    width: 33%;
+}

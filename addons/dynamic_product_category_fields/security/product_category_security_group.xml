@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zira>
+
+     <record id="group_add_custom_fields" model="res.groups">
+        <field name="name">Create custom fields</field>
+    </record>
+
+</zira>

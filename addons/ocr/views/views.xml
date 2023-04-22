@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zira>
+  <data>
+  		<record id="view_ocr_templates_form" model="ir.ui.view">
+			<field name="name">ocr_templates.form</field>
+			<field name="model">ocr.template</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<group>
+							<field name="name"/>
+							<field name="source_save"/>
+							<field name="lang"/>
+							<field name="char_whitelist"/>
+							<field name="regex"/>
+							<field name="image"
+								widget="image_drawing_fields"
+								options="{
+									'json_field': 'json',
+									'json_fields': 'json_fields',
+								}"/>
+							<field name="json"/>
+
+							<field name="model_id"/>
+							<field name="field_ids"  widget="many2many_tags"/>
+							<field name="json_fields"/>
+						</group>
+							<group>
+								<field name="pdf_enable"/>
+								<field name="pdf_file" attrs="{'invisible':[('pdf_enable','=',False)]}"/>
+								<field name="pdf_insert_from_record" attrs="{'invisible':[('pdf_enable','=',False)]}"/>
+								<field name="pdf_only" attrs="{'invisible':[('pdf_enable','=',False)]}"/>
+								<field name="pdf_options" attrs="{'invisible':[('pdf_enable','=',False)]}"/>
+								<field name="pdf_font_size" attrs="{'invisible':[('pdf_enable','=',False)]}"/>
+								<field name="pdf_font_color" attrs="{'invisible':[('pdf_enable','=',False)]}"/>
+							</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+  		<record id="view_ocr_templates_tree" model="ir.ui.view">
+			<field name="name">ocr_templates.tree</field>
+			<field name="model">ocr.template</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="lang"/>
+					<field name="image"/>
+					<field name="model_id"/>
+				</tree>
+			</field>
+		</record>
+
+        <record id="action_ocr_templates_window" model="ir.actions.act_window">
+            <field name="name">OCR templates</field>
+            <field name="res_model">ocr.template</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+  
+      <menuitem name="OCR" id="ocr.menu_root" parent="base.menu_custom" sequence="15"/>
+  
+      <menuitem name="OCR templates"
+                id="ocr.ocr_templates"
+                parent="ocr.menu_root"
+                action="action_ocr_templates_window"/>
+  </data>
+</zira>
